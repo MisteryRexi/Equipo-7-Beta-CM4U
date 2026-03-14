@@ -192,7 +192,6 @@
                         <li><i class="fas fa-check"></i> <span data-i18n="p3f1">Hasta 100 publicaciones por día</span></li>
                         <li><i class="fas fa-check"></i> <span data-i18n="p3f2">Cualquier red social disponible</span></li>
                         <li><i class="fas fa-check"></i> <span data-i18n="p3f3">Hasta 30 variantes por pub.</span></li>
-                        <li><i class="fas fa-check"></i> <span data-i18n="p3f4">Soporte prioritario 24/7</span></li>
                     </ul>
                     <button class="btn btn-secondary auth-btn w-100" data-i18n="choosePlan">Seleccionar</button>
                 </div>
@@ -289,7 +288,7 @@
                     
                         <!-- USER DROPDOWN (NEW) -->
                         <div class="user-dropdown" id="userDropdown">
-                            <div class="dropdown-item"><i class="fas fa-user-circle"></i> <span data-i18n="myProfile">Mi Perfil</span></div>
+                            <div class="dropdown-item" id="btnGoHome"><i class="fas fa-home"></i> <span data-i18n="navHome">Inicio</span></div>
                             <div class="dropdown-item"><i class="fas fa-cog"></i> <span data-i18n="configProfile">Preferencias</span></div>
                             <div style="border-top: 1px solid var(--border-color); margin: 5px 0;"></div>
                             <div class="dropdown-item text-danger" id="logoutBtnDropdown">
@@ -305,6 +304,18 @@
                 <!-- SECTION: MAIN (List of Posts + Big Create Button) -->
                 <section id="dash-main" class="dash-section active">
                     
+                    <!-- USER PROFILE PANEL -->
+                    <div class="user-profile-panel">
+                        <div class="photo" id="mainDashPhoto">C</div>
+                        <div class="info">
+                            <h3 id="mainDashName">Bienvenido</h3>
+                            <p id="mainDashNetworks" data-i18n="linkedNetsText">Redes vinculadas: 3</p>
+                        </div>
+                        <div>
+                            <span class="plan-badge" id="mainDashPlan">Plan GRATUITO</span>
+                        </div>
+                    </div>
+
                     <button class="btn-create-massive" id="btnOpenCreateView">
                         <i class="fas fa-plus"></i>
                         <span data-i18n="createNewPostBtn">Crear nueva publicación</span>
@@ -318,7 +329,7 @@
                             <button class="social-btn" data-net="all" style="width: auto; padding: 0 15px; border-radius: 20px;" data-i18n="all">Todas</button>
                             <button class="social-btn ig" data-net="ig"><i class="fab fa-instagram"></i></button>
                             <button class="social-btn fb" data-net="fb"><i class="fab fa-facebook-f"></i></button>
-                            <button class="social-btn tw" data-net="tw"><i class="fab fa-twitter"></i></button>
+                            <button class="social-btn tw" data-net="tw"><i class="fa-brands fa-x-twitter"></i></button>
                             <button class="social-btn tk" data-net="tk"><i class="fab fa-tiktok"></i></button>
                         </div>
 
@@ -350,6 +361,7 @@
                                 <button class="img-opt-btn" data-opt="upload"><i class="fas fa-upload"></i> <span data-i18n="upload">Subir</span></button>
                                 <button class="img-opt-btn" data-opt="ref"><i class="fas fa-link"></i> <span data-i18n="refImg">Referencia</span></button>
                             </div>
+                            <input type="file" id="imageUploadInput" accept="image/*" style="display: none;">
                             <!-- Prompt imagen IA (Oculto por defecto si cambias a subir/ref) -->
                             <div id="imagePromptContainer" style="margin-bottom: 25px;">
                                 <label class="form-label" style="font-size:0.85rem;" data-i18n="promptImg">Prompt específico para la imagen (IA)</label>
@@ -361,7 +373,7 @@
                             <div class="social-selector" id="createNetworkSel">
                                 <button class="social-btn ig" data-net="ig"><i class="fab fa-instagram"></i></button>
                                 <button class="social-btn fb" data-net="fb"><i class="fab fa-facebook-f"></i></button>
-                                <button class="social-btn tw" data-net="tw"><i class="fab fa-twitter"></i></button>
+                                <button class="social-btn tw" data-net="tw"><i class="fa-brands fa-x-twitter"></i></button>
                                 <button class="social-btn tk" data-net="tk"><i class="fab fa-tiktok"></i></button>
                             </div>
 
@@ -394,38 +406,73 @@
                             <div class="loading-spinner" id="genLoader" style="margin: 50% auto;"></div>
 
                             <div id="generationResult" style="display: none;">
-                                <!-- Network Tabs -->
-                                <div class="preview-tabs" id="previewTabs">
-                                    <button class="preview-tab active" data-net="general" data-i18n="generalPrev">General</button>
-                                </div>
-
-                                <!-- Variantes de texto -->
-                                <div class="text-variants-box" style="margin-bottom:15px;">
-                                    <label style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:10px; display:block;" data-i18n="textVariants">Variantes de Copy Generadas:</label>
-                                    <div class="variants-list" id="textVariantsList">
-                                        <!-- Buttons populated dynamically -->
-                                    </div>
-                                </div>
-
-                                <div class="preview-container preview-general" id="previewArea">
-                                    <div class="preview-header">
-                                        <div class="avatar-small">C</div>
-                                        <div>
-                                            <strong style="font-size:0.9rem;">Tu Marca</strong>
-                                            <div style="font-size:0.75rem; color:var(--text-secondary);" class="ph-sub">@tu_marca • Ahora</div>
-                                        </div>
-                                        <i class="fas fa-ellipsis-h" style="margin-left:auto; color:var(--text-secondary);"></i>
-                                    </div>
-                                    <div class="preview-text" id="genText" contenteditable="true"></div>
-                                    <img src="" id="genImage" alt="Generated">
-                                    <div class="preview-footer" id="previewFooter">
-                                        <div style="display:flex; gap:15px;"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i></div>
-                                    </div>
-                                </div>
                                 
-                                <div class="action-buttons-grid">
-                                    <button class="btn btn-secondary" id="btnAskAlternative"><i class="fas fa-rotate"></i> <span data-i18n="genAlt">Generar alternativa</span></button>
-                                    <button class="btn btn-primary" id="btnPublishFinal"><i class="fas fa-paper-plane"></i> <span data-i18n="publishBtn">Publicar</span></button>
+                                <div id="alternativesView">
+                                    <h3 style="margin-bottom: 15px; border-bottom:none; color:var(--text-primary);" data-i18n="resTitle">PREVIEW PRINCIPAL</h3>
+                                    
+                                    <!-- Main Preview Box -->
+                                    <div class="preview-container preview-general" style="margin-bottom: 25px;">
+                                        <div class="preview-header">
+                                            <div class="avatar-small">C</div>
+                                            <div style="flex:1;">
+                                                <strong style="font-size:0.9rem;">Tu Marca</strong>
+                                                <div style="font-size:0.75rem; color:var(--text-secondary);">@tu_marca • Ahora</div>
+                                            </div>
+                                        </div>
+                                        <img src="" id="mainPreviewImg" style="width:100%; display:block;">
+                                        <textarea id="mainPreviewTxt" class="preview-text" style="width:100%; border:none; border-top:1px solid var(--border-color); background:transparent; resize:none; min-height:100px; padding:15px; font-family:inherit; color:var(--text-primary);"></textarea>
+                                        <div class="preview-footer">
+                                            <div style="display:flex; gap:15px;"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Variants Selection -->
+                                    <div class="variants-controls">
+                                        <div>
+                                            <label class="form-label">VARIANTES DE IMAGEN</label>
+                                            <div class="image-variants-grid" id="imageVariantsList">
+                                                <!-- JS Populated -->
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label">VARIANTES DE TEXTO</label>
+                                            <div class="text-variants-stack" id="textVariantsList">
+                                                <!-- JS Populated -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-primary w-100 mt-30" id="btnShowPreviewView"><i class="fas fa-eye"></i> <span data-i18n="showPreview">Mostrar previsualización</span></button>
+                                </div>
+
+                                <div id="finalPreviewView" style="display: none;">
+                                    <h3 style="margin-bottom: 15px; border-bottom:none; color:var(--text-primary);">Previsualización Final</h3>
+                                    
+                                    <!-- Network Tabs -->
+                                    <div class="preview-tabs" id="previewTabs">
+                                        <button class="preview-tab active" data-net="general" data-i18n="generalPrev">General</button>
+                                    </div>
+
+                                    <div class="preview-container preview-general" id="previewArea">
+                                        <div class="preview-header">
+                                            <div class="avatar-small">C</div>
+                                            <div style="flex:1;">
+                                                <strong style="font-size:0.9rem;">Tu Marca</strong>
+                                                <div style="font-size:0.75rem; color:var(--text-secondary);" class="ph-sub">@tu_marca • Ahora</div>
+                                            </div>
+                                            <i class="fas fa-ellipsis-h" style="margin-left:auto; color:var(--text-secondary);"></i>
+                                        </div>
+                                        <div class="preview-text" id="genText"></div>
+                                        <img src="" id="genImage" alt="Generated">
+                                        <div class="preview-footer" id="previewFooter">
+                                            <div style="display:flex; gap:15px;"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="action-buttons-grid">
+                                        <button class="btn btn-secondary" id="btnBackToAlt"><i class="fas fa-arrow-left"></i> <span data-i18n="backToAlt">Volver a variantes</span></button>
+                                        <button class="btn btn-primary" id="btnPublishFinal"><i class="fas fa-paper-plane"></i> <span data-i18n="publishBtn">Publicar</span></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -497,7 +544,7 @@
                         </div>
                         <div class="post-card">
                             <div class="post-card-header">
-                                <div class="social-icon si-twitter"><i class="fab fa-twitter"></i></div>
+                                <div class="social-icon si-twitter"><i class="fa-brands fa-x-twitter"></i></div>
                                 <span style="font-weight: 600;">@tu_marca</span>
                             </div>
                             <img src="https://picsum.photos/300/150?random=2" class="post-card-img">
@@ -516,30 +563,52 @@
                 <section id="dash-networks" class="dash-section">
                     <h2 style="margin-bottom: 20px; color: var(--text-primary);" data-i18n="netTitle">Gestión de Redes Sociales</h2>
                     
-                    <div class="posts-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <h3 style="margin-bottom: 15px; color: var(--primary-color);">Redes sociales vinculadas</h3>
+                    <div class="posts-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 40px;">
                         <div class="creator-panel text-center">
                             <i class="fab fa-instagram" style="font-size: 3rem; color: #E1306C; margin-bottom: 15px;"></i>
                             <h3>Instagram</h3>
-                            <p style="color: var(--success-color); margin-bottom: 15px;"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> <span data-i18n="connected">Conectado</span></p>
-                            <button class="btn btn-secondary w-100" data-i18n="disconnect">Desconectar</button>
+                            <button class="btn btn-secondary w-100 mt-10" data-i18n="disconnect">Desconectar</button>
                         </div>
                         <div class="creator-panel text-center">
                             <i class="fab fa-facebook-f" style="font-size: 3rem; color: #1877F2; margin-bottom: 15px;"></i>
                             <h3>Facebook</h3>
-                            <p style="color: var(--success-color); margin-bottom: 15px;"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> <span data-i18n="connected">Conectado</span></p>
-                            <button class="btn btn-secondary w-100" data-i18n="disconnect">Desconectar</button>
+                            <button class="btn btn-secondary w-100 mt-10" data-i18n="disconnect">Desconectar</button>
                         </div>
                         <div class="creator-panel text-center">
-                            <i class="fab fa-twitter" style="font-size: 3rem; color: var(--text-primary); margin-bottom: 15px;"></i>
-                            <h3>Twitter / X</h3>
-                            <p style="color: var(--text-secondary); margin-bottom: 15px;"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> <span data-i18n="disconnected">Sin conectar</span></p>
-                            <button class="btn btn-primary w-100" data-i18n="connectNet">Conectar</button>
+                            <i class="fa-brands fa-x-twitter" style="font-size: 3rem; color: var(--text-primary); margin-bottom: 15px;"></i>
+                            <h3>X (Twitter)</h3>
+                            <button class="btn btn-secondary w-100 mt-10" data-i18n="disconnect">Desconectar</button>
                         </div>
-                        <div class="creator-panel text-center">
-                            <i class="fab fa-tiktok" style="font-size: 3rem; color: #ff0050; margin-bottom: 15px;"></i>
-                            <h3>TikTok</h3>
-                            <p style="color: var(--success-color); margin-bottom: 15px;"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> <span data-i18n="connected">Conectado</span></p>
-                            <button class="btn btn-secondary w-100" data-i18n="disconnect">Desconectar</button>
+                    </div>
+
+                    <h3 style="margin-bottom: 15px; color: var(--text-secondary);">Más redes sociales</h3>
+                    <div class="posts-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                        
+                        <div class="creator-panel text-center" style="opacity:0.7;">
+                            <i class="fab fa-linkedin" style="font-size: 2.5rem; color: #0077b5; margin-bottom: 10px;"></i>
+                            <h4>LinkedIn</h4>
+                            <button class="btn btn-primary w-100 mt-10 btn-upgrade-net" style="font-size:0.8rem;">Conectar</button>
+                        </div>
+                        <div class="creator-panel text-center" style="opacity:0.7;">
+                            <i class="fab fa-pinterest" style="font-size: 2.5rem; color: #E60023; margin-bottom: 10px;"></i>
+                            <h4>Pinterest</h4>
+                            <button class="btn btn-primary w-100 mt-10 btn-upgrade-net" style="font-size:0.8rem;">Conectar</button>
+                        </div>
+                        <div class="creator-panel text-center" style="opacity:0.7;">
+                            <i class="fab fa-reddit" style="font-size: 2.5rem; color: #FF4500; margin-bottom: 10px;"></i>
+                            <h4>Reddit</h4>
+                            <button class="btn btn-primary w-100 mt-10 btn-upgrade-net" style="font-size:0.8rem;">Conectar</button>
+                        </div>
+                        <div class="creator-panel text-center" style="opacity:0.7;">
+                            <i class="fab fa-youtube" style="font-size: 2.5rem; color: #FF0000; margin-bottom: 10px;"></i>
+                            <h4>YouTube</h4>
+                            <button class="btn btn-primary w-100 mt-10 btn-upgrade-net" style="font-size:0.8rem;">Conectar</button>
+                        </div>
+                        <div class="creator-panel text-center" style="opacity:0.7;">
+                            <i class="fab fa-tiktok" style="font-size: 2.5rem; color: #ff0050; margin-bottom: 10px;"></i>
+                            <h4>TikTok</h4>
+                            <button class="btn btn-primary w-100 mt-10 btn-upgrade-net" style="font-size:0.8rem;">Conectar</button>
                         </div>
                     </div>
                 </section>
@@ -597,6 +666,85 @@
                 <button class="btn btn-secondary w-100 btn-alt-opt" data-i18n="changeText">Solo Texto</button>
                 <button class="btn btn-secondary w-100 btn-alt-opt" data-i18n="changeImg">Solo Imagen</button>
                 <button class="btn btn-primary w-100 btn-alt-opt" data-i18n="changeBoth">Ambos (Nuevo Prompt)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upgrade Network Modal -->
+    <div id="upgrade-net-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" id="closeUpgradeNetModal"><i class="fas fa-times"></i></button>
+            <h3 style="margin-bottom: 15px; color: var(--text-primary);">Límite alcanzado</h3>
+            <p style="margin-bottom: 25px; color: var(--text-secondary);">Amplía tu plan para agregar más redes sociales.</p>
+            <div style="display: flex; gap: 15px;">
+                <button class="btn btn-secondary w-100" id="btnCancelUpgrade">Cancelar</button>
+                <button class="btn btn-primary w-100" id="btnGoToPlans">Mejorar plan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plan Feature Page -->
+    <div class="plan-feature-page" id="planFeaturePage">
+        <div class="plan-page-header">
+            <button class="btn-close-plan" id="closePlanPage"><i class="fas fa-times"></i></button>
+            <h2 class="section-title" style="margin-bottom: 10px;">Mejora tu Plan</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 40px;">Descubre todos los beneficios de nuestros planes premium.</p>
+        </div>
+        <div class="container" id="planPageGridContainer">
+            <!-- Will be populated by JS: Plans Cards -->
+        </div>
+
+        <div class="container">
+            <h3 style="text-align: center; margin-top: 60px; color: var(--text-primary);">Tabla Comparativa de Funciones</h3>
+            <div class="plans-model-container">
+                <div class="comp-header">
+                    <div>Característica</div>
+                    <div>FREE</div>
+                    <div>TRIMESTRAL</div>
+                    <div>ANUAL</div>
+                </div>
+                <div class="comp-row">
+                    <div class="comp-feat">Redes Sociales</div>
+                    <div class="comp-val">1 Perfil</div>
+                    <div class="comp-val">3 Perfiles</div>
+                    <div class="comp-val">Ilimitados</div>
+                </div>
+                <div class="comp-row">
+                    <div class="comp-feat">Generación con IA</div>
+                    <div class="comp-val">Básico</div>
+                    <div class="comp-val">Pro (3 var)</div>
+                    <div class="comp-val">Ultra (Ilimitado)</div>
+                </div>
+                <div class="comp-row">
+                    <div class="comp-feat">Imágenes IA / mes</div>
+                    <div class="comp-val">5</div>
+                    <div class="comp-val">50</div>
+                    <div class="comp-val">Ilimitadas</div>
+                </div>
+                <div class="comp-row">
+                    <div class="comp-feat">Programación Social</div>
+                    <div class="comp-check"><i class="fas fa-check"></i></div>
+                    <div class="comp-check"><i class="fas fa-check"></i></div>
+                    <div class="comp-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="comp-row">
+                    <div class="comp-feat">Análisis de Datos</div>
+                    <div class="comp-cross"><i class="fas fa-times"></i></div>
+                    <div class="comp-check"><i class="fas fa-check"></i></div>
+                    <div class="comp-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="comp-row" style="background: rgba(108, 92, 231, 0.03); border-top: 2px solid var(--border-color);">
+                    <div class="comp-feat">Inversión Mensual</div>
+                    <div class="comp-price">$0</div>
+                    <div class="comp-price">$29</div>
+                    <div class="comp-price">$99</div>
+                </div>
+                <div class="comp-row" style="padding: 20px;">
+                    <div></div>
+                    <div><button class="btn btn-secondary btn-adquirir-comp" onclick="showToast('Ya tienes el plan FREE')">Actual</button></div>
+                    <div><button class="btn btn-primary btn-adquirir-comp" onclick="showToast('Redirigiendo a pasarela de pago...')">Adquirir</button></div>
+                    <div><button class="btn btn-primary btn-adquirir-comp" onclick="showToast('Redirigiendo a pasarela de pago...')">Adquirir</button></div>
+                </div>
             </div>
         </div>
     </div>

@@ -34,7 +34,7 @@ const i18n = {
         plan2Name: "TRIMESTRAL", perQuarter: "/3 meses", plan2Desc: "Ahorra y escala tu creación de contenido a mediano plazo.",
         p2f1: "Hasta 10 publicaciones por día", p2f2: "Hasta 4 redes sociales", p2f3: "Hasta 10 alternativas por pub.", p2f4: "Duración de 3 meses continuos",
         plan3Name: "ANUAL", perYear: "/año", plan3Desc: "Para agencias y profesionales con alta carga de trabajo.",
-        p3f1: "Hasta 100 publicaciones por día", p3f2: "Cualquier red social disponible", p3f3: "Hasta 30 variantes por pub.", p3f4: "Soporte prioritario 24/7",
+        p3f1: "Hasta 100 publicaciones por día", p3f2: "Cualquier red social disponible", p3f3: "Hasta 30 variantes por pub.",
         welcome: "Bienvenido a CM4U", email: "Correo Electrónico", password: "Contraseña", enter: "Entrar",
         logout: "Salir", myProfile: "Mi Perfil", configProfile: "Preferencias",
         createNewPostBtn: "Crear nueva publicación", panelPosts: "Publicaciones Creadas", all: "Todas",
@@ -82,7 +82,7 @@ const i18n = {
         plan2Name: "QUARTERLY", perQuarter: "/3 mo", plan2Desc: "Save money and scale content mid-term.",
         p2f1: "Up to 10 posts per day", p2f2: "Up to 4 social networks", p2f3: "Up to 10 alternatives per post", p2f4: "3 continuous months duration",
         plan3Name: "ANNUAL", perYear: "/yr", plan3Desc: "For agencies and high-workload professionals.",
-        p3f1: "Up to 100 posts per day", p3f2: "Any available social network", p3f3: "Up to 30 variants per post", p3f4: "24/7 priority support",
+        p3f1: "Up to 100 posts per day", p3f2: "Any available social network", p3f3: "Up to 30 variants per post",
         welcome: "Welcome to CM4U", email: "Email Address", password: "Password", enter: "Enter",
         logout: "Log out", myProfile: "My Profile", configProfile: "Preferences",
         createNewPostBtn: "Create new post", panelPosts: "Created Posts", all: "All",
@@ -152,30 +152,58 @@ function initScrollAnimations() {
 function initAuth() {
     const authBtns = document.querySelectorAll('.auth-btn');
     const modal = document.getElementById('auth-modal');
-    authBtns.forEach(btn => btn.addEventListener('click', () => modal.classList.add('active')));
-    document.getElementById('closeAuthModal').addEventListener('click', () => modal.classList.remove('active'));
-
-    document.getElementById('authForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        modal.classList.remove('active');
-        document.getElementById('landing-page').classList.remove('active');
-        document.getElementById('landing-page').classList.add('hidden');
-        
-        const dashboard = document.getElementById('dashboard-page');
-        dashboard.classList.remove('hidden');
-        setTimeout(() => dashboard.classList.add('active'), 50);
-
-        const email = document.getElementById('authEmail').value;
-        document.getElementById('userAvatar').innerText = email ? email.charAt(0).toUpperCase() : 'C';
+    authBtns.forEach(btn => {
+        // Do not attach the standard modal behavior to "Mejorar plan" button inside networks panel
+        if(!btn.classList.contains('w-100')) {
+             btn.addEventListener('click', () => modal.classList.add('active'));
+        }
+    });
+    
+    // Explicit landing buttons:
+    document.querySelectorAll('.auth-btn, .btn-create-massive').forEach(b => {
+        if(b.id !== 'btnOpenCreateView' && b.id !== 'btnPublishFinal' && !b.closest('.plan-card')) {
+            b.addEventListener('click', () => modal.classList.add('active'));
+        }
     });
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        document.getElementById('dashboard-page').classList.remove('active');
-        document.getElementById('dashboard-page').classList.add('hidden');
-        const landing = document.getElementById('landing-page');
-        landing.classList.remove('hidden');
-        setTimeout(() => landing.classList.add('active'), 50);
-    });
+    const closeAuthBtn = document.getElementById('closeAuthModal');
+    if(closeAuthBtn) closeAuthBtn.addEventListener('click', () => modal.classList.remove('active'));
+
+    const authForm = document.getElementById('authForm');
+    if(authForm) {
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            modal.classList.remove('active');
+            document.getElementById('landing-page').classList.remove('active');
+            document.getElementById('landing-page').classList.add('hidden');
+            
+            const dashboard = document.getElementById('dashboard-page');
+            dashboard.classList.remove('hidden');
+            setTimeout(() => dashboard.classList.add('active'), 50);
+
+            const email = document.getElementById('authEmail').value;
+            const userChar = email ? email.charAt(0).toUpperCase() : 'C';
+            
+            // Set User profile data
+            const userAvatar = document.getElementById('userAvatar');
+            if(userAvatar) userAvatar.innerText = userChar;
+            const mainDashPhoto = document.getElementById('mainDashPhoto');
+            if(mainDashPhoto) mainDashPhoto.innerText = userChar;
+            const mainDashName = document.getElementById('mainDashName');
+            if(mainDashName) mainDashName.innerText = email ? email.split('@')[0] : 'Bienvenido';
+        });
+    }
+
+    const logoutBtn = document.getElementById('logoutBtn');
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            document.getElementById('dashboard-page').classList.remove('active');
+            document.getElementById('dashboard-page').classList.add('hidden');
+            const landing = document.getElementById('landing-page');
+            landing.classList.remove('hidden');
+            setTimeout(() => landing.classList.add('active'), 50);
+        });
+    }
 }
 
 function initRouting() {
@@ -250,10 +278,28 @@ function initRouting() {
         if(notifDropdown) notifDropdown.classList.remove('active');
     });
 
+    // Dropdown items logic
+    const dropdownItems = userDropdown.querySelectorAll('.dropdown-item');
+    dropdownItems.forEach(di => {
+        di.addEventListener('click', () => {
+            const labelEl = di.querySelector('span');
+            const i18nKey = labelEl.getAttribute('data-i18n');
+            if(i18nKey === 'configProfile') {
+                const configNavItem = document.querySelector('.nav-item[data-target="dash-config"]');
+                if(configNavItem) configNavItem.click();
+            } else if (i18nKey === 'navHome') {
+                const homeNavItem = document.querySelector('.nav-item[data-target="dash-main"]');
+                if(homeNavItem) homeNavItem.click();
+            }
+            userDropdown.classList.remove('active');
+        });
+    });
+
     // Dropdown logout button routing
     const logoutBtnDropdown = document.getElementById('logoutBtnDropdown');
     if(logoutBtnDropdown) {
-        logoutBtnDropdown.addEventListener('click', () => {
+        logoutBtnDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
             document.getElementById('logoutBtn').click(); // trigger standard logout
         });
     }
@@ -316,6 +362,54 @@ function initDashboardLogic() {
     const txtArea = document.getElementById('postTextArea');
     const genBtn = document.getElementById('btnGeneratePost');
     
+    // Upload image logical setup
+    const uploadBtn = document.querySelector('[data-opt="upload"]');
+    const refBtn = document.querySelector('[data-opt="ref"]');
+    const aiBtn = document.querySelector('[data-opt="ai"]');
+    const fileInput = document.getElementById('imageUploadInput');
+    let uploadedImageSrc = null;
+
+    if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (ev) => { 
+                    uploadedImageSrc = ev.target.result; 
+                    showToast("Imagen cargada exitosamente"); 
+                    
+                    // IF we already have a preview visible, update it immediately
+                    const mainPrev = document.getElementById('mainPreviewImg');
+                    if (mainPrev && document.getElementById('generationResult').style.display !== 'none') {
+                        mainPrev.src = uploadedImageSrc;
+                        // Update the 1st variant (or all if user wants to replace them all)
+                        const variants = document.querySelectorAll('.img-variant img');
+                        variants.forEach(img => img.src = uploadedImageSrc);
+                    }
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+    }
+    
+    // Options logic for images
+    const imgOpts = document.querySelectorAll('.img-opt-btn');
+    imgOpts.forEach(btn => {
+        btn.addEventListener('click', () => {
+            imgOpts.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const promptCont = document.getElementById('imagePromptContainer');
+            if(promptCont) {
+                promptCont.style.display = btn.getAttribute('data-opt') === 'ai' ? 'block' : 'none';
+            }
+            if(btn.getAttribute('data-opt') === 'upload' || btn.getAttribute('data-opt') === 'ref') {
+                if(fileInput) fileInput.click();
+            } else {
+                uploadedImageSrc = null; // reset if user swaps to AI
+            }
+        });
+    });
+
+    // Network Selecting logic
     nwBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const net = btn.getAttribute('data-net');
@@ -327,19 +421,8 @@ function initDashboardLogic() {
     });
 
     txtArea.addEventListener('input', checkGenerateCondition);
-    
-    const imgOpts = document.querySelectorAll('.img-opt-btn');
-    imgOpts.forEach(btn => {
-        btn.addEventListener('click', () => {
-            imgOpts.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const promptCont = document.getElementById('imagePromptContainer');
-            if(promptCont) {
-                promptCont.style.display = btn.getAttribute('data-opt') === 'ai' ? 'block' : 'none';
-            }
-        });
-    });
 
+    // Schedule logic
     const postNow = document.getElementById('postNow');
     const scheduleDate = document.getElementById('postScheduleDate');
     const scheduleTime = document.getElementById('postScheduleTime');
@@ -351,14 +434,115 @@ function initDashboardLogic() {
         if(box) box.style.opacity = dis ? '0.5' : '1';
     });
 
+    // Generar Publicacion logic
     genBtn.addEventListener('click', () => {
-        // Prepare preview area
         document.getElementById('emptyPreviewArea').style.display = 'none';
         document.getElementById('generationResult').style.display = 'none';
         const loader = document.getElementById('genLoader');
         loader.style.display = 'block';
 
-        // Prepare Network Tabs map
+        setTimeout(() => {
+            loader.style.display = 'none';
+            document.getElementById('generationResult').style.display = 'block';
+            document.getElementById('alternativesView').style.display = 'block';
+            document.getElementById('finalPreviewView').style.display = 'none';
+
+            let inputText = txtArea.value.toLowerCase();
+            
+            // SIMULATION LOGIC based on user inputs
+            let imageKeywords = [];
+            let generatedTexts = [];
+            
+            if (inputText.includes('gran reapertura en macico')) {
+                imageKeywords = ['mexico-city', 'opening', 'celebration'];
+                generatedTexts = [
+                    "¡Gran Reapertura en México! 🇲🇽✨ Ven a celebrar con nosotros este nuevo capítulo.",
+                    "Estamos de vuelta con el mejor ambiente mexicano. 🏢 ¡No te pierdas la reapertura!",
+                    "¡Crecemos contigo en México! 🎉🎊 Te esperamos en nuestra gran celebración de reapertura."
+                ];
+            } else if (inputText.includes('viajes')) {
+                imageKeywords = ['nature', 'mountain', 'landscape'];
+                generatedTexts = [
+                    "¡Explora paisajes asombrosos en tu próximo viaje! 🏔️✨ La naturaleza te espera.",
+                    "Descubre el destino de tus sueños. Paisajes que parecen sacados de un cuento. 🌲🏞️",
+                    "Vive la aventura entre montañas y lagos cristalinos. ¡Reserva hoy! 🛶🌄"
+                ];
+            } else if (inputText.includes('turistas')) {
+                imageKeywords = ['beach', 'tourist', 'airplane'];
+                generatedTexts = [
+                    "¡Descubre el mundo con nosotros! ✈️🌴 Planes exclusivos para los turistas más exigentes.",
+                    "¿Listo para tu próxima escapada? Las mejores playas te esperan. 🏖️🌞 Paquetes a tu medida.",
+                    "Explora, vive y disfruta. Organizamos tus viajes turísticos. 🚢🌍 Momentos únicos."
+                ];
+            } else if (inputText.includes('local') || inputText.includes('méxico') || inputText.includes('mexico')) {
+                imageKeywords = ['mexico', 'store', 'business'];
+                generatedTexts = [
+                    "¡Gran Inauguración en la vibrante Ciudad de México! 🇲🇽✨ Ven a conocer nuestro nuevo local.",
+                    "Estamos emocionados de abrir nuestras puertas en CDMX. 🏢 ¡Ofertas exclusivas!",
+                    "¡Crecemos contigo! Nuestro nuevo local en CDMX ya es una realidad. 🎉🎊 Te esperamos."
+                ];
+            } else {
+                imageKeywords = ['abstract', 'tech', 'nature'];
+                let bText = txtArea.value || "¡Un mensaje increíble generado para tus redes! 🌟";
+                generatedTexts = [
+                    `${bText} \n\n#innovacion #futuro`,
+                    `¿Sabías de esto? 🤔 \n\n${bText} \n\n#tendencia #comunidad`,
+                    `✨ ${bText} \n\n#novedades #digital`
+                ];
+            }
+
+            const imgList = document.getElementById('imageVariantsList');
+            const txtList = document.getElementById('textVariantsList');
+            imgList.innerHTML = '';
+            txtList.innerHTML = '';
+
+            let variantImgs = [];
+            for(let i=0; i<3; i++) {
+                const src = uploadedImageSrc ? uploadedImageSrc : `https://picsum.photos/seed/${imageKeywords[i]}${Math.random()}/600/600`;
+                variantImgs.push(src);
+                
+                const imgDiv = document.createElement('div');
+                imgDiv.className = `img-variant ${i===0?'selected':''}`;
+                imgDiv.innerHTML = `<img src="${src}">`;
+                imgDiv.onclick = () => {
+                    document.querySelectorAll('.img-variant').forEach(v => v.classList.remove('selected'));
+                    imgDiv.classList.add('selected');
+                    document.getElementById('mainPreviewImg').src = src;
+                };
+                imgList.appendChild(imgDiv);
+            }
+
+            generatedTexts.forEach((t, i) => {
+                const txtDiv = document.createElement('div');
+                txtDiv.className = `txt-variant ${i===0?'selected':''}`;
+                txtDiv.innerText = t;
+                txtDiv.onclick = () => {
+                    document.querySelectorAll('.txt-variant').forEach(v => v.classList.remove('selected'));
+                    txtDiv.classList.add('selected');
+                    document.getElementById('mainPreviewTxt').value = t;
+                };
+                txtList.appendChild(txtDiv);
+            });
+
+            // Set initial principal preview
+            document.getElementById('mainPreviewImg').src = variantImgs[0];
+            document.getElementById('mainPreviewTxt').value = generatedTexts[0];
+
+        }, 1500);
+    });
+
+    document.getElementById('btnShowPreviewView').addEventListener('click', () => {
+        document.getElementById('alternativesView').style.display = 'none';
+        
+        const finalImgSrc = document.getElementById('mainPreviewImg').src;
+        const finalTxtVal = document.getElementById('mainPreviewTxt').value;
+        
+        document.getElementById('genImage').src = finalImgSrc;
+        document.getElementById('genText').innerText = finalTxtVal;
+        
+        document.getElementById('finalPreviewView').style.display = 'block';
+
+        // Set up the preview tabs for selected networks
         const tabsContainer = document.getElementById('previewTabs');
         tabsContainer.innerHTML = '';
         if(selectedNetworks.size > 0) {
@@ -369,58 +553,31 @@ function initDashboardLogic() {
         } else {
              tabsContainer.innerHTML = `<button class="preview-tab active" data-net="general">General</button>`;
         }
-
-        setTimeout(() => {
-            loader.style.display = 'none';
-            document.getElementById('generationResult').style.display = 'block';
-            
-            postImageParam++;
-            document.getElementById('genImage').src = `https://picsum.photos/600/400?random=${postImageParam}`;
-            
-            // Text Variants
-            const baseText = txtArea.value || "¡Un mensaje increíble generado para tus redes! 🌟";
-            const variants = [
-                `${baseText} \n\n#innovacion #tech #futuro #emprendimiento`,
-                `¿Sabías de esto? 🤔 \n\n${baseText} \n\n¡Déjanos tu comentario! 👇 \n#tendencia #marketing #comunidad`,
-                `✨ ${baseText} \n\n¡Descubre más en el link en la bio! 🚀 \n#novedades #digital`
-            ];
-            
-            const listEl = document.getElementById('textVariantsList');
-            listEl.innerHTML = '';
-            variants.forEach((v, i) => {
-                const btn = document.createElement('button');
-                btn.className = `variant-btn ${i === 0 ? 'active' : ''}`;
-                btn.innerHTML = `<strong>Opción ${i+1}</strong> <span style="white-space: pre-wrap;">${v}</span>`;
-                btn.onclick = () => {
-                    document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    document.getElementById('genText').innerText = v;
-                };
-                listEl.appendChild(btn);
+        
+        // Setup clicking logic on tabs
+        document.querySelectorAll('.preview-tab').forEach(tb => {
+            tb.addEventListener('click', () => {
+                document.querySelectorAll('.preview-tab').forEach(i => i.classList.remove('active'));
+                tb.classList.add('active');
+                const nw = tb.getAttribute('data-net');
+                const prv = document.getElementById('previewArea');
+                prv.className = `preview-container preview-${nw}`; 
+                
+                const footer = document.getElementById('previewFooter');
+                if (nw === 'ig') footer.innerHTML = '<div style="display:flex; gap:15px;"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i></div><i class="far fa-bookmark" style="margin-left:auto;"></i>';
+                else if (nw === 'tw') footer.innerHTML = '<i class="far fa-comment"></i> <i class="fas fa-retweet"></i> <i class="far fa-heart"></i> <i class="fas fa-chart-bar"></i>';
+                else if (nw === 'fb') footer.innerHTML = '<div style="flex:1;text-align:center;"><i class="far fa-thumbs-up"></i> Me gusta</div><div style="flex:1;text-align:center;"><i class="far fa-comment"></i> Comentar</div><div style="flex:1;text-align:center;"><i class="fas fa-share"></i> Compartir</div>';
+                else if (nw === 'tk') footer.innerHTML = '<div style="text-align:center;font-size:1.8rem;line-height:1;"><i class="fas fa-heart"></i><div style="font-size:0.75rem">12K</div></div> <div style="text-align:center;font-size:1.8rem;line-height:1;"><i class="fas fa-comment"></i><div style="font-size:0.75rem">1K</div></div> <div style="text-align:center;font-size:1.8rem;line-height:1;"><i class="fas fa-bookmark"></i><div style="font-size:0.75rem">800</div></div> <div style="text-align:center;font-size:1.8rem;line-height:1;"><i class="fas fa-share"></i><div style="font-size:0.75rem">2K</div></div>';
+                else footer.innerHTML = '<div style="display:flex; gap:15px;"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i></div>';
             });
-            document.getElementById('genText').innerText = variants[0];
-            
-            // Re-apply tab listeners
-            document.querySelectorAll('.preview-tab').forEach(tb => {
-                tb.addEventListener('click', () => {
-                    document.querySelectorAll('.preview-tab').forEach(i => i.classList.remove('active'));
-                    tb.classList.add('active');
-                    const nw = tb.getAttribute('data-net');
-                    const prv = document.getElementById('previewArea');
-                    prv.className = `preview-container preview-${nw}`; // general, ig, fb, tw, tk
-                    
-                    const footer = document.getElementById('previewFooter');
-                    if (nw === 'ig') footer.innerHTML = '<div style="display:flex; gap:15px;"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i></div><i class="far fa-bookmark" style="margin-left:auto;"></i>';
-                    else if (nw === 'tw') footer.innerHTML = '<i class="far fa-comment"></i> <i class="fas fa-retweet"></i> <i class="far fa-heart"></i> <i class="fas fa-chart-bar"></i>';
-                    else if (nw === 'fb') footer.innerHTML = '<div style="flex:1;text-align:center;"><i class="far fa-thumbs-up"></i> Me gusta</div><div style="flex:1;text-align:center;"><i class="far fa-comment"></i> Comentar</div><div style="flex:1;text-align:center;"><i class="fas fa-share"></i> Compartir</div>';
-                    else if (nw === 'tk') footer.innerHTML = '<div style="text-align:center;font-size:1.8rem;line-height:1;"><i class="fas fa-heart"></i><div style="font-size:0.75rem">12K</div></div> <div style="text-align:center;font-size:1.8rem;line-height:1;"><i class="fas fa-comment"></i><div style="font-size:0.75rem">1K</div></div> <div style="text-align:center;font-size:1.8rem;line-height:1;"><i class="fas fa-bookmark"></i><div style="font-size:0.75rem">800</div></div> <div style="text-align:center;font-size:1.8rem;line-height:1;"><i class="fas fa-share"></i><div style="font-size:0.75rem">2K</div></div>';
-                    else footer.innerHTML = '<div style="display:flex; gap:15px;"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i></div>';
-                });
-            });
-            
-            document.querySelector('.preview-tab.active')?.click();
+        });
+        
+        document.querySelector('.preview-tab.active')?.click();
+    });
 
-        }, 1500);
+    document.getElementById('btnBackToAlt').addEventListener('click', () => {
+        document.getElementById('finalPreviewView').style.display = 'none';
+        document.getElementById('alternativesView').style.display = 'block';
     });
 
     document.getElementById('btnPublishFinal').addEventListener('click', () => {
@@ -435,19 +592,32 @@ function initDashboardLogic() {
         }
         
         renderPosts('all');
-        // Return to main layout
         document.getElementById('btnBackToMain').click();
     });
 
-    const altModal = document.getElementById('alt-modal');
-    document.getElementById('btnAskAlternative').addEventListener('click', () => altModal.classList.add('active'));
-    document.getElementById('closeAltModal').addEventListener('click', () => altModal.classList.remove('active'));
-    document.querySelectorAll('.btn-alt-opt').forEach(btn => {
-        btn.addEventListener('click', () => {
-            altModal.classList.remove('active');
-            genBtn.click();
-        });
+    // Upgrade networks panel logic
+    const upgradeModal = document.getElementById('upgrade-net-modal');
+    document.querySelectorAll('.btn-upgrade-net').forEach(btn => {
+        btn.addEventListener('click', () => upgradeModal.classList.add('active'));
     });
+    
+    document.getElementById('closeUpgradeNetModal').addEventListener('click', () => upgradeModal.classList.remove('active'));
+    document.getElementById('btnCancelUpgrade').addEventListener('click', () => upgradeModal.classList.remove('active'));
+    
+    const planFeaturePage = document.getElementById('planFeaturePage');
+    const pageGridContainer = document.getElementById('planPageGridContainer');
+    document.getElementById('btnGoToPlans').addEventListener('click', () => {
+        upgradeModal.classList.remove('active');
+        
+        // Copy the plans from landing page to this modal view
+        const originalGrid = document.querySelector('#landing-page .plans-grid');
+        if(originalGrid && pageGridContainer.innerHTML.trim() === '') {
+            pageGridContainer.innerHTML = `<div class="plans-grid">${originalGrid.innerHTML}</div>`;
+        }
+        planFeaturePage.classList.add('active');
+    });
+    
+    document.getElementById('closePlanPage').addEventListener('click', () => planFeaturePage.classList.remove('active'));
 }
 
 function checkGenerateCondition() {
@@ -471,7 +641,7 @@ function renderPosts(filter) {
         let iconHtml = '', iconClass = '';
         if(post.net === 'ig') { iconHtml = '<i class="fab fa-instagram"></i>'; iconClass = 'si-instagram'; }
         if(post.net === 'fb') { iconHtml = '<i class="fab fa-facebook-f"></i>'; iconClass = 'si-facebook'; }
-        if(post.net === 'tw') { iconHtml = '<i class="fab fa-twitter"></i>'; iconClass = 'si-twitter'; }
+        if(post.net === 'tw') { iconHtml = '<i class="fa-brands fa-x-twitter"></i>'; iconClass = 'si-twitter'; }
         if(post.net === 'tk') { iconHtml = '<i class="fab fa-tiktok"></i>'; iconClass = 'si-tiktok'; }
 
         const card = document.createElement('div');
