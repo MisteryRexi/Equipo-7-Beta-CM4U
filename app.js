@@ -29,19 +29,19 @@ const i18n = {
         f4l1s: "Inspírate: ", feat4L1: "Sigue cuentas que nutran tu mente.",
         f4l2s: "Desconecta: ", feat4L2: "Apaga pantallas para encender nuevas ideas.",
         plansTitle: "Planes de Suscripción", choosePlan: "Seleccionar", recommended: "Recomendado",
-        plan1Name: "GRATUITO", perMonth: "/mes", plan1Desc: "Ideal para probar la herramienta de forma básica.",
-        p1f1: "1 publicación por día", p1f2: "Solo 1 red social", p1f3: "Máx. 3 modificaciones por pub.",
-        plan2Name: "TRIMESTRAL", perQuarter: "/3 meses", plan2Desc: "Ahorra y escala tu creación de contenido a mediano plazo.",
-        p2f1: "Hasta 10 publicaciones por día", p2f2: "Hasta 4 redes sociales", p2f3: "Hasta 10 alternativas por pub.", p2f4: "Duración de 3 meses continuos",
-        plan3Name: "ANUAL", perYear: "/año", plan3Desc: "Para agencias y profesionales con alta carga de trabajo.",
-        p3f1: "Hasta 100 publicaciones por día", p3f2: "Cualquier red social disponible", p3f3: "Hasta 30 variantes por pub.",
+        plan1Name: "FREE", perMonth: " USD/mes", plan1Desc: "Ideal para probar la herramienta de forma básica.",
+        p1f1: "40 publicaciones por mes", p1f2: "Solo 1 red social", p1f3: "Máx. 3 modificaciones por pub.",
+        plan2Name: "CREATOR", perQuarter: " USD/mes", plan2Desc: "Potencia tu marca personal con mayor alcance.",
+        p2f1: "Hasta 600 publicaciones por mes", p2f2: "Hasta 4 redes sociales", p2f3: "Hasta 10 alternativas por pub.", p2f4: "Soporte prioritario",
+        plan3Name: "AGENCY", perYear: " USD/año", plan3Desc: "Para agencias y profesionales con alta carga de trabajo.",
+        p3f1: "Hasta 2000 publicaciones por mes", p3f2: "Cualquier red social disponible", p3f3: "Hasta 30 variantes por pub.",
         welcome: "Bienvenido a CM4U", email: "Correo Electrónico", password: "Contraseña", enter: "Entrar",
         logout: "Salir", myProfile: "Mi Perfil", configProfile: "Preferencias",
         createNewPostBtn: "Crear nueva publicación", panelPosts: "Publicaciones Creadas", all: "Todas",
         panelCreate: "Crear Nueva Publicación", back: "Volver",
         enterText: "1. Texto / Prompt de la Publicación", imageOpt: "2. Origen de Imagen", aiGen: "Generar IA", upload: "Subir", refImg: "Referencia",
         selNetworks: "3. Seleccionar Redes Sociales", schedule: "4. Programación", pubNow: "Publicar Inmediato", generatePost: "Generar publicación",
-        resTitle: "Vista Previa", fillForm: "Completa la información a la izquierda para ver la previsualización.",
+        resTitle: "Vista Previa", fillForm: "Escribe o selecciona una red para comenzar.",
         generalPrev: "General", genAlt: "Generar alternativa", publishBtn: "Publicar",
         statsTitle: "Rendimiento y Estadísticas", views: "Vistas Totales", likes: "Me Gusta", comments: "Comentarios",
         interactChart: "Crecimiento de Interacciones (7 días)",
@@ -77,12 +77,12 @@ const i18n = {
         feat4Title: "Mental Health & Creativity", feat4Desc: "Your well-being is the basis of authentic content.",
         f4l1s: "Inspire: ", feat4L1: "Follow accounts that feed your mind.", f4l2s: "Disconnect: ", feat4L2: "Turn off screens to spark new ideas.",
         plansTitle: "Subscription Plans", choosePlan: "Select", recommended: "Recommended",
-        plan1Name: "FREE", perMonth: "/mo", plan1Desc: "Great for testing the basic tools.",
-        p1f1: "1 post per day", p1f2: "Only 1 social network", p1f3: "Max 3 modifications per post",
-        plan2Name: "QUARTERLY", perQuarter: "/3 mo", plan2Desc: "Save money and scale content mid-term.",
-        p2f1: "Up to 10 posts per day", p2f2: "Up to 4 social networks", p2f3: "Up to 10 alternatives per post", p2f4: "3 continuous months duration",
-        plan3Name: "ANNUAL", perYear: "/yr", plan3Desc: "For agencies and high-workload professionals.",
-        p3f1: "Up to 100 posts per day", p3f2: "Any available social network", p3f3: "Up to 30 variants per post",
+        plan1Name: "FREE", perMonth: " USD/mo", plan1Desc: "Great for testing the basic tools.",
+        p1f1: "40 posts per month", p1f2: "Only 1 social network", p1f3: "Max 3 modifications per post",
+        plan2Name: "CREATOR", perQuarter: " USD/mo", plan2Desc: "Boost your personal brand with more reach.",
+        p2f1: "Up to 600 posts per month", p2f2: "Up to 4 social networks", p2f3: "Up to 10 alternatives per post", p2f4: "Priority support",
+        plan3Name: "AGENCY", perYear: " USD/year", plan3Desc: "For agencies and high-workload professionals.",
+        p3f1: "Up to 2000 posts per month", p3f2: "Any available social network", p3f3: "Up to 30 variants per post",
         welcome: "Welcome to CM4U", email: "Email Address", password: "Password", enter: "Enter",
         logout: "Log out", myProfile: "My Profile", configProfile: "Preferences",
         createNewPostBtn: "Create new post", panelPosts: "Created Posts", all: "All",
@@ -442,6 +442,7 @@ function initDashboardLogic() {
         document.getElementById('generationResult').style.display = 'none';
         const loader = document.getElementById('genLoader');
         loader.style.display = 'block';
+        let useLocalMexicoImages = false;
 
         setTimeout(() => {
             loader.style.display = 'none';
@@ -455,24 +456,25 @@ function initDashboardLogic() {
             let imageKeywords = [];
             let generatedTexts = [];
             
-            if (inputText.includes('viajes') || inputText.includes('viaje') || inputText.includes('vaije') || inputText.includes('turismo') || inputText.includes('vacaciones')) {
-                // Focus on Landscapes for travel
-                imageKeywords = ['landscape', 'nature', 'mountain', 'beach', 'resort'];
-                generatedTexts = [
-                    "¡El mundo te espera! 🌍 Descubre destinos que te robarán el aliento. Reserva tu próxima aventura hoy mismo. ✈️✨",
-                    "¿Buscas inspiración para tus vacaciones? 🌴 Ven a conocer los rincones más mágicos del planeta. #ViajesIncreíbles #Aventura",
-                    "Transforma tus sueños en recuerdos. 🗺️ Tu guía definitiva para explorar el mundo está aquí. ¡Empieza a planear! 🏔️🛶",
-                    "¿Listo para desconectar? 🌊 Las mejores ofertas en viajes están a un solo clic. ¡No dejes que se escapen! 🏖️🌞",
-                    "Vive experiencias únicas. 🎒 Creamos el itinerario perfecto para que solo te preocupes de disfrutar. 🚢🌍 #TravelTime"
-                ];
-            } else if (inputText.includes('méxico') || inputText.includes('mexico')) {
-                // Focus on Mexico culture and cities
-                imageKeywords = ['mexico-city', 'mexican-culture', 'cancun'];
+            if (inputText.includes('méxico') || inputText.includes('mexico')) {
+                // Priority for Mexico with root images
+                imageKeywords = ['mexico1.png', 'mexico2.png', 'mexico3.png'];
                 generatedTexts = [
                     "¡Descubre la magia de México! 🇲🇽✨ Desde sus ciudades vibrantes hasta sus playas paradisíacas.",
                     "Explora el corazón de México. 🏢 Patrimonio, cultura y modernidad en un solo lugar. ¡Ven a conocernos!",
                     "¡Viva México! 🎉🎊 Disfruta de experiencias únicas en los mejores destinos del país."
                 ];
+                // Force local images for Mexico
+                useLocalMexicoImages = true;
+            } else if (inputText.includes('viajes') || inputText.includes('viaje') || inputText.includes('vaje') || inputText.includes('vaije') || inputText.includes('turismo') || inputText.includes('vacaciones')) {
+                // Travel logic with 3 texts as requested
+                imageKeywords = ['landscape', 'nature', 'beach'];
+                generatedTexts = [
+                    "¡El mundo te espera! 🌍 Descubre destinos que te robarán el aliento. Reserva tu próxima aventura hoy mismo. ✈️✨",
+                    "¿Buscas inspiración para tus vacaciones? 🌴 Ven a conocer los rincones más mágicos del planeta. #ViajesIncreíbles",
+                    "Transforma tus sueños en recuerdos. 🗺️ Tu guía definitiva para explorar el mundo está aquí. 🏔️🛶"
+                ];
+                useLocalMexicoImages = false;
             } else if (inputText.includes('turistas')) {
                 imageKeywords = ['beach', 'tourist', 'airplane'];
                 generatedTexts = [
@@ -480,21 +482,16 @@ function initDashboardLogic() {
                     "¿Listo para tu próxima escapada? Las mejores playas te esperan. 🏖️🌞 Paquetes a tu medida.",
                     "Explora, vive y disfruta. Organizamos tus viajes turísticos. 🚢🌍 Momentos únicos."
                 ];
-            } else if (inputText.includes('local')) {
-                imageKeywords = ['mexico-city', 'store', 'business'];
-                generatedTexts = [
-                    "¡Gran Inauguración! 🏢✨ Ven a conocer nuestro nuevo local.",
-                    "Estamos emocionados de abrir nuestras puertas. 🎉 ¡Ofertas exclusivas!",
-                    "¡Crecemos contigo! Nuestro nuevo local ya es una realidad. 🎉🎊 Te esperamos."
-                ];
+                useLocalMexicoImages = false;
             } else {
                 imageKeywords = ['abstract', 'tech', 'nature'];
                 let bText = txtArea.value || "¡Un mensaje increíble generado para tus redes! 🌟";
                 generatedTexts = [
                     `${bText} \n\n#innovacion #futuro`,
-                    `¿Sabías de esto? 🤔 \n\n${bText} \n\n#tendencia #comunidad`,
+                    `¿Sabías de esto? 🤔 \n\n${bText} \n\n#tendencia`,
                     `✨ ${bText} \n\n#novedades #digital`
                 ];
+                useLocalMexicoImages = false;
             }
 
             const imgList = document.getElementById('imageVariantsList');
@@ -504,7 +501,14 @@ function initDashboardLogic() {
 
             let variantImgs = [];
             for(let i=0; i<3; i++) {
-                const src = uploadedImageSrc ? uploadedImageSrc : `https://picsum.photos/seed/${imageKeywords[i]}${Math.random()}/600/600`;
+                let src;
+                if (uploadedImageSrc) {
+                    src = uploadedImageSrc;
+                } else if (useLocalMexicoImages) {
+                    src = imageKeywords[i];
+                } else {
+                    src = `https://picsum.photos/seed/${imageKeywords[i]}${Math.random()}/600/600`;
+                }
                 variantImgs.push(src);
                 
                 const imgDiv = document.createElement('div');
