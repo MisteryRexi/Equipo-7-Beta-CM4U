@@ -352,9 +352,11 @@ function resetCreateView() {
     selectedNetworks.clear();
     document.querySelectorAll('#createNetworkSel .social-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById('postTextArea').value = '';
+    document.getElementById('postImagePrompt').value = ''; // Added to clear image prompt too
     document.getElementById('emptyPreviewArea').style.display = 'block';
     document.getElementById('generationResult').style.display = 'none';
     document.getElementById('btnGeneratePost').style.display = 'none';
+    document.getElementById('genLoader').style.display = 'none'; // Ensure loader is hidden
 }
 
 function initDashboardLogic() {
@@ -453,19 +455,23 @@ function initDashboardLogic() {
             let imageKeywords = [];
             let generatedTexts = [];
             
-            if (inputText.includes('gran reapertura en macico')) {
-                imageKeywords = ['mexico-city', 'opening', 'celebration'];
+            if (inputText.includes('viajes') || inputText.includes('viaje') || inputText.includes('vaije') || inputText.includes('turismo') || inputText.includes('vacaciones')) {
+                // Focus on Landscapes for travel
+                imageKeywords = ['landscape', 'nature', 'mountain', 'beach', 'resort'];
                 generatedTexts = [
-                    "¡Gran Reapertura en México! 🇲🇽✨ Ven a celebrar con nosotros este nuevo capítulo.",
-                    "Estamos de vuelta con el mejor ambiente mexicano. 🏢 ¡No te pierdas la reapertura!",
-                    "¡Crecemos contigo en México! 🎉🎊 Te esperamos en nuestra gran celebración de reapertura."
+                    "¡El mundo te espera! 🌍 Descubre destinos que te robarán el aliento. Reserva tu próxima aventura hoy mismo. ✈️✨",
+                    "¿Buscas inspiración para tus vacaciones? 🌴 Ven a conocer los rincones más mágicos del planeta. #ViajesIncreíbles #Aventura",
+                    "Transforma tus sueños en recuerdos. 🗺️ Tu guía definitiva para explorar el mundo está aquí. ¡Empieza a planear! 🏔️🛶",
+                    "¿Listo para desconectar? 🌊 Las mejores ofertas en viajes están a un solo clic. ¡No dejes que se escapen! 🏖️🌞",
+                    "Vive experiencias únicas. 🎒 Creamos el itinerario perfecto para que solo te preocupes de disfrutar. 🚢🌍 #TravelTime"
                 ];
-            } else if (inputText.includes('viajes')) {
-                imageKeywords = ['nature', 'mountain', 'landscape'];
+            } else if (inputText.includes('méxico') || inputText.includes('mexico')) {
+                // Focus on Mexico culture and cities
+                imageKeywords = ['mexico-city', 'mexican-culture', 'cancun'];
                 generatedTexts = [
-                    "¡Explora paisajes asombrosos en tu próximo viaje! 🏔️✨ La naturaleza te espera.",
-                    "Descubre el destino de tus sueños. Paisajes que parecen sacados de un cuento. 🌲🏞️",
-                    "Vive la aventura entre montañas y lagos cristalinos. ¡Reserva hoy! 🛶🌄"
+                    "¡Descubre la magia de México! 🇲🇽✨ Desde sus ciudades vibrantes hasta sus playas paradisíacas.",
+                    "Explora el corazón de México. 🏢 Patrimonio, cultura y modernidad en un solo lugar. ¡Ven a conocernos!",
+                    "¡Viva México! 🎉🎊 Disfruta de experiencias únicas en los mejores destinos del país."
                 ];
             } else if (inputText.includes('turistas')) {
                 imageKeywords = ['beach', 'tourist', 'airplane'];
@@ -474,12 +480,12 @@ function initDashboardLogic() {
                     "¿Listo para tu próxima escapada? Las mejores playas te esperan. 🏖️🌞 Paquetes a tu medida.",
                     "Explora, vive y disfruta. Organizamos tus viajes turísticos. 🚢🌍 Momentos únicos."
                 ];
-            } else if (inputText.includes('local') || inputText.includes('méxico') || inputText.includes('mexico')) {
-                imageKeywords = ['mexico', 'store', 'business'];
+            } else if (inputText.includes('local')) {
+                imageKeywords = ['mexico-city', 'store', 'business'];
                 generatedTexts = [
-                    "¡Gran Inauguración en la vibrante Ciudad de México! 🇲🇽✨ Ven a conocer nuestro nuevo local.",
-                    "Estamos emocionados de abrir nuestras puertas en CDMX. 🏢 ¡Ofertas exclusivas!",
-                    "¡Crecemos contigo! Nuestro nuevo local en CDMX ya es una realidad. 🎉🎊 Te esperamos."
+                    "¡Gran Inauguración! 🏢✨ Ven a conocer nuestro nuevo local.",
+                    "Estamos emocionados de abrir nuestras puertas. 🎉 ¡Ofertas exclusivas!",
+                    "¡Crecemos contigo! Nuestro nuevo local ya es una realidad. 🎉🎊 Te esperamos."
                 ];
             } else {
                 imageKeywords = ['abstract', 'tech', 'nature'];

@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     
     <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- Main Styles -->
     <link rel="stylesheet" href="styles.css">
@@ -329,7 +329,7 @@
                             <button class="social-btn" data-net="all" style="width: auto; padding: 0 15px; border-radius: 20px;" data-i18n="all">Todas</button>
                             <button class="social-btn ig" data-net="ig"><i class="fab fa-instagram"></i></button>
                             <button class="social-btn fb" data-net="fb"><i class="fab fa-facebook-f"></i></button>
-                            <button class="social-btn tw" data-net="tw"><i class="fa-brands fa-x-twitter"></i></button>
+                            <button class="social-btn tw" data-net="tw" title="X"><i class="fa-brands fa-x-twitter"></i></button>
                             <button class="social-btn tk" data-net="tk"><i class="fab fa-tiktok"></i></button>
                         </div>
 
@@ -365,7 +365,7 @@
                             <!-- Prompt imagen IA (Oculto por defecto si cambias a subir/ref) -->
                             <div id="imagePromptContainer" style="margin-bottom: 25px;">
                                 <label class="form-label" style="font-size:0.85rem;" data-i18n="promptImg">Prompt específico para la imagen (IA)</label>
-                                <textarea class="form-control" id="postImagePrompt" rows="2" placeholder="Describe exactamente cómo quieres la imagen (ej: Un perro astronauta en 3D...)"></textarea>
+                                <textarea class="form-control" id="postImagePrompt" rows="2" placeholder="Describe exactamente cómo quieres la imagen (ej: Un paraíso tropical en el Caribe...)"></textarea>
                             </div>
 
                             <!-- Selector de Redes -->
@@ -373,7 +373,7 @@
                             <div class="social-selector" id="createNetworkSel">
                                 <button class="social-btn ig" data-net="ig"><i class="fab fa-instagram"></i></button>
                                 <button class="social-btn fb" data-net="fb"><i class="fab fa-facebook-f"></i></button>
-                                <button class="social-btn tw" data-net="tw"><i class="fa-brands fa-x-twitter"></i></button>
+                                <button class="social-btn tw" data-net="tw" title="X"><i class="fa-brands fa-x-twitter"></i></button>
                                 <button class="social-btn tk" data-net="tk"><i class="fab fa-tiktok"></i></button>
                             </div>
 
@@ -528,34 +528,36 @@
 
                     <h3 style="margin-bottom: 15px; color: var(--text-primary);" data-i18n="topPosts">Publicaciones con más interacción</h3>
                     <div class="top-posts">
-                        <div class="post-card">
-                            <div class="post-card-header">
-                                <div class="social-icon si-instagram"><i class="fab fa-instagram"></i></div>
-                                <span style="font-weight: 600;">@tu_marca</span>
+                        <div class="post-card-mini preview-ig">
+                            <div class="preview-header">
+                                <div class="avatar-small">C</div>
+                                <div style="flex:1;">
+                                    <strong style="font-size:0.8rem;">@tu_marca</strong>
+                                </div>
+                                <div class="social-icon-corner"><i class="fab fa-instagram"></i></div>
                             </div>
                             <img src="https://picsum.photos/300/150?random=1" class="post-card-img">
-                            <div class="post-card-content">
-                                5 tips para mejorar tu productividad remota...
-                            </div>
+                            <div class="preview-text-mini">5 tips para mejorar tu productividad remota...</div>
                             <div class="post-card-stats">
                                 <span><i class="fas fa-heart"></i> 4.2k</span>
                                 <span><i class="fas fa-comment"></i> 128</span>
                             </div>
                         </div>
-                        <div class="post-card">
-                            <div class="post-card-header">
-                                <div class="social-icon si-twitter"><i class="fa-brands fa-x-twitter"></i></div>
-                                <span style="font-weight: 600;">@tu_marca</span>
+                            <div class="post-card-mini preview-tw">
+                                <div class="preview-header">
+                                    <div class="avatar-small">C</div>
+                                    <div style="flex:1;">
+                                        <strong style="font-size:0.8rem;">@tu_marca</strong>
+                                    </div>
+                                    <div class="social-icon-corner"><i class="fa-brands fa-x-twitter"></i></div>
+                                </div>
+                                <div class="preview-text-mini">¿Planeando tu próximo escape? ✈️ Descubre destinos increíbles con nosotros. #TravelTourism</div>
+                                <img src="https://picsum.photos/300/150?random=2" class="post-card-img">
+                                <div class="post-card-stats">
+                                    <span><i class="fas fa-heart"></i> 3.1k</span>
+                                    <span><i class="fas fa-retweet"></i> 890</span>
+                                </div>
                             </div>
-                            <img src="https://picsum.photos/300/150?random=2" class="post-card-img">
-                            <div class="post-card-content">
-                                Nuevo lanzamiento: descubriendo lo imposible 🚀
-                            </div>
-                            <div class="post-card-stats">
-                                <span><i class="fas fa-retweet"></i> 890</span>
-                                <span><i class="fas fa-heart"></i> 3.1k</span>
-                            </div>
-                        </div>
                     </div>
                 </section>
 
@@ -577,7 +579,7 @@
                         </div>
                         <div class="creator-panel text-center">
                             <i class="fa-brands fa-x-twitter" style="font-size: 3rem; color: var(--text-primary); margin-bottom: 15px;"></i>
-                            <h3>X (Twitter)</h3>
+                            <h3>X</h3>
                             <button class="btn btn-secondary w-100 mt-10" data-i18n="disconnect">Desconectar</button>
                         </div>
                     </div>
